@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+
+##
+# Start script
+#
+# Start the services managed by this project.
+# Expects each service to have a start script at `scripts/start` which
+# accepts a `--detach` flag to prevent attaching the terminal or
+# tailing logs/outputs.
+##
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+
+# Check whether mine-support network needs creating
+if [ -z "$(docker network ls --filter name=^mine-support$ --format={{.Name}})" ]; then
+  echo "Creating mine-support Docker network"
+  docker network create mine-support
+fi
+
+(
+  cd "${projectRoot}"
+
+  docker-compose up --detach
+
+  echo "Starting services"
+  ../mine-support/scripts/start --detach
+  ../mine-support-api-gateway/scripts/start --detach
+  ../mine-support-calculation-service/scripts/start --detach
+  ../mine-support-claim-service/scripts/start --detach
+  ../mine-support-payment-service/scripts/start --detach
+  ../mine-support-user-service/scripts/start --detach
+)

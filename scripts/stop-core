@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+##
+# Start Core script
+#
+# Start the supporting services this repository provides.
+# This enables other project services to be started one-by-one and
+# connected to shared message queues and other supporting services.
+##
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+
+# Check whether mine-support network needs creating
+if [ -z "$(docker network ls --filter name=^mine-support$ --format={{.Name}})" ]; then
+  echo "Creating mine-support Docker network"
+  docker network create mine-support
+fi
+
+(
+  cd "${projectRoot}"
+
+  docker-compose down -v
+)
