@@ -11,15 +11,15 @@ set -e
 projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
 
 (
-  cd "${projectRoot}/.."
+  cd "${projectRoot}"
 
-  echo "Stopping services..."
-  mine-support/scripts/stop
-  mine-support-api-gateway/scripts/stop
-  mine-support-calculation-service/scripts/stop
-  mine-support-claim-service/scripts/stop
-  mine-support-payment-service/scripts/stop
-  mine-support-user-service/scripts/stop
+  ../mine-support/scripts/stop
+  ../mine-support-api-gateway/scripts/stop
+  ../mine-support-calculation-service/scripts/stop
+  ../mine-support-claim-service/scripts/stop
+  ../mine-support-payment-service/scripts/stop
+  ../mine-support-user-service/scripts/stop
+  scripts/stop-core
 )
 
 # Check whether mine-support network exists and is no longer in use

@@ -21,9 +21,7 @@ fi
 (
   cd "${projectRoot}"
 
-  docker-compose up --detach
-
-  echo "Starting services"
+  scripts/start-core --detach
   ../mine-support/scripts/start --detach
   ../mine-support-api-gateway/scripts/start --detach
   ../mine-support-calculation-service/scripts/start --detach
