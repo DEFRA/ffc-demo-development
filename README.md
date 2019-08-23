@@ -31,7 +31,7 @@ scripts/start
 scripts/stop
 ```
 
-It may be convenient to run a subset of the application stack connected to shared core services (such as message queues). For this purpose, scripts are provided to start the core services without the rest of the stack. Each additional service may be run using the scripts provided in their repositories.
+It may be convenient to run a subset of the application stack connected to shared core services (such as message queues). For this purpose, scripts are provided to start the core services without the rest of the stack. Each additional service may be run using the scripts provided in their repositories (`./services/<repository>`).
 
 ```
 # Start supporting services without the Mine Support stack

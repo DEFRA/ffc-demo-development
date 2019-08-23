@@ -12,29 +12,30 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
 (
   cd "${projectRoot}/services"
 
-  echo "Cloning repositories"
+  printf "\nCloning repositories\n"
+
   test -d mine-support \
     && >&2 echo "The 'mine-support' directory already exists. Skipping." \
-    || echo "Should be installing mine-support"
-    # || git clone git@github.com:DEFRA/mine-support.git
+    || git clone git@github.com:DEFRA/mine-support.git
   test -d mine-support-api-gateway \
     && >&2 echo "The 'mine-support-api-gateway' directory already exists. Skipping." \
-    || echo "Should be installing mine-support-api-gateway"
-    # || git clone git@github.com:DEFRA/mine-support-api-gateway.git
+    || git clone git@github.com:DEFRA/mine-support-api-gateway.git
   test -d mine-support-calculation-service \
     && >&2 echo "The 'mine-support-calculation-service' directory already exists. Skipping." \
-    || echo "Should be installing mine-support-calculation-service"
-    # || git clone git@github.com:DEFRA/mine-support-calculation-service.git
+    || git clone git@github.com:DEFRA/mine-support-calculation-service.git
   test -d mine-support-claim-service \
     && >&2 echo "The 'mine-support-claim-service' directory already exists. Skipping." \
-    || echo "Should be installing mine-support-claim-service"
-    # || git clone git@github.com:DEFRA/mine-support-claim-service.git
+    || git clone git@github.com:DEFRA/mine-support-claim-service.git
   test -d mine-support-payment-service \
     && >&2 echo "The 'mine-support-payment-service' directory already exists. Skipping." \
-    || echo "Should be installing mine-support-payment-service"
-    # || git clone git@github.com:DEFRA/mine-support-payment-service.git
+    || git clone git@github.com:DEFRA/mine-support-payment-service.git
   test -d mine-support-user-service \
     && >&2 echo "The 'mine-support-user-service' directory already exists. Skipping." \
-    || echo "Should be installing mine-support-user-service"
-    # || git clone git@github.com:DEFRA/mine-support-user-service.git
+    || git clone git@github.com:DEFRA/mine-support-user-service.git
+
+  cd "${projectRoot}"
+
+  printf "\nBuilding services\n"
+
+  scripts/build
 )

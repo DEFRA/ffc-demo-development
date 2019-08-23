@@ -22,10 +22,10 @@ fi
   cd "${projectRoot}"
 
   scripts/start-core --detach
-  ../mine-support/scripts/start --detach
-  ../mine-support-api-gateway/scripts/start --detach
-  ../mine-support-calculation-service/scripts/start --detach
-  ../mine-support-claim-service/scripts/start --detach
-  ../mine-support-payment-service/scripts/start --detach
-  ../mine-support-user-service/scripts/start --detach
+  services/mine-support/scripts/start --detach
+  services/mine-support-api-gateway/scripts/start --detach
+  services/mine-support-calculation-service/scripts/start --detach
+  services/mine-support-claim-service/scripts/start --detach
+  services/mine-support-payment-service/scripts/start --detach
+  services/mine-support-user-service/scripts/start --detach
 )
