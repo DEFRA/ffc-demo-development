@@ -9,14 +9,16 @@
 set -e
 projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
 
-# Check whether mine-support network needs creating
-if [ -z "$(docker network ls --filter name=^mine-support$ --format={{.Name}})" ]; then
-  echo "Creating mine-support Docker network"
-  docker network create mine-support
-fi
-
 (
   cd "${projectRoot}"
 
   docker-compose down -v
 )
+
+# Check whether mine-support network exists and is no longer in use
+if [ ! -z "$(docker network ls --filter name=^mine-support$ --format={{.Name}})" ] \
+  && [ "$(docker network inspect -f {{.Containers}} mine-support &>/dev/null)" = "map[]" ] \
+; then
+  echo "Removing mine-support network"
+  docker network rm mine-support
+fi
