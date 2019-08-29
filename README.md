@@ -7,9 +7,13 @@ Digital service mock to claim public money in the event property subsides into m
 - Docker
 - Docker Compose
 
+### Warning for users of Windows Subsystem for Linux
+
+This project relies on services which use volume mounts in Docker Compose. Windows Subsystem for Linux (WSL) requires some customisation to work with Docker volume mounts. The simplest option is to set up automounting of `/mnt/c` via [/etc/wsl.conf](https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/). For a well-explained write-up, see [this blog post](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) by Nick Janetakis.
+
 ## Setup
 
-Scripts are provided to clone and prepare repositories for developing all the services which make up this application. Services will be cloned to [`./services/<repository>`](./services).
+A script is provided to clone and prepare repositories for developing all the services which make up this application. Services will be cloned to [`./services/<repository>`](./services).
 
 ```
 # Clone repositories and build services
@@ -21,15 +25,14 @@ scripts/install
 Scripts are provided to conveniently run the entire application stack in development. These rely on the equivalent scripts in each service repository, which should bind-mount application code from the host file system and enable hot reloading where possible.
 
 ```
-# Rebuild services
-scripts/build
-
 # Start the application stack
 scripts/start
 
 # Stop the application stack, removing Docker networks and volumes
 scripts/stop
 ```
+
+## Running a subset of services
 
 It may be convenient to run a subset of the application stack connected to shared core services (such as message queues). For this purpose, scripts are provided to start the core services without the rest of the stack. Each additional service may be run using the scripts provided in their repositories (`./services/<repository>`).
 
@@ -41,9 +44,17 @@ scripts/start-core
 scripts/stop-core
 ```
 
-### Volume mounts on Windows Subsystem for Linux
+## Rebuilding and updating services
 
-For the volume mounts to work correct via WSL it is necessary to either set up automounting of `/mnt/c`, or change the mount point for the shared drive from `/mnt/c` to `/c`. For a well-explained write-up, see [this blog post](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) by Nick Janetakis.
+Scripts are provided to conveniently apply updates to services. The build script simply rebuilds all the services managed by this project. The update script first pulls any available updates and then rebuilds each service to ensure that any updates are applied correctly.
+
+```
+# Build services
+scripts/build
+
+# Update and build services
+scripts/update
+```
 
 ## Contributing to this project
 

@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+##
+# Update script
+#
+# Update the services managed by this project.
+# Depends on git and scripts/build.
+##
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+
+(
+  cd "${projectRoot}"
+
+  (cd "services/mine-support" && git pull)
+  (cd "services/mine-support-api-gateway" && git pull)
+  (cd "services/mine-support-calculation-service" && git pull)
+  (cd "services/mine-support-claim-service" && git pull)
+  (cd "services/mine-support-payment-service" && git pull)
+  (cd "services/mine-support-user-service" && git pull)
+
+  scripts/build
+)
