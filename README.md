@@ -32,6 +32,10 @@ scripts/start
 scripts/stop
 ```
 
+The application is exposed on port 3000 by default so may be accessed via a web browser on
+
+> http://localhost:3000
+
 ## Running a subset of services
 
 It may be convenient to run a subset of the application stack connected to shared core services (such as message queues). For this purpose, scripts are provided to start the core services without the rest of the stack. Each additional service may be run using the scripts provided in their repositories (`./services/<repository>`).
