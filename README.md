@@ -32,9 +32,13 @@ scripts/start
 scripts/stop
 ```
 
-The application is exposed on port 3000 by default so may be accessed via a web browser on
+The application is exposed on port 3000 by default so may be accessed via a web browser on [localhost:3000](http://localhost:3000).
 
-> http://localhost:3000
+The start script will check for existing services or volumes associated with this project and abort if any are found. Flags may be passed to force a restart, either destroying or retaining volumes. For more information, pass the `--help` or `-h` flag:
+
+```
+scripts/start --help
+```
 
 ## Running a subset of services
 
@@ -48,21 +52,31 @@ scripts/start-core
 scripts/stop-core
 ```
 
-## Rebuilding and updating services
+## Dependency changes
 
-Scripts are provided to conveniently apply updates to services. The build script simply rebuilds all the services managed by this project. The update script first pulls any available updates and then rebuilds each service to ensure that any updates are applied correctly.
+By default, services run bind-mounted code in development so local changes are applied automatically without needing to restart. However, changes to dependencies do necessitate rebuilding the affected service since these are not mounted for performance reasons.
 
 ```
 # Build services
 scripts/build
+```
 
-# Update and build services
+## Pulling updates
+
+Since dependency changes necessitate a rebuild of the affected service, it is recommended to rebuild each service after pulling remote updates or switching/merging branches. For convenience, a script is provided to pull remote updates on the current branch of each service and rebuild all services to ensure that any updates are applied correctly.
+
+```
+# Pull remote updates and build services
 scripts/update
 ```
 
+This will not handle any merge conflicts during the `git pull` operations so check the output carefully and deal with any conflicts within each service repository.
+
 ## Contributing to this project
 
-Please read the [contribution guidelines](/CONTRIBUTING.md) before submitting a pull request.
+Please ensure that all contributions meet the standards set out in the [DDTS Future Farming Developer Guide](https://dev.azure.com/defradev/DEFRA_FutureFarming/_git/defra-ff-documentation?path=%2Fdeveloper-guide%2Findex.md&version=GBmaster&createIfNew=true) before submitting a pull request.
+
+Contributions to each service should be made in their individual repositories.
 
 ## License
 
