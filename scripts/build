@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+##
+# Build script
+#
+# Build the services managed by this project.
+# Expects each service to have a build script at `scripts/build`.
+##
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+
+(
+  cd "${projectRoot}/services"
+
+  mine-support/scripts/build
+  mine-support-api-gateway/scripts/build
+  mine-support-calculation-service/scripts/build
+  mine-support-claim-service/scripts/build
+  mine-support-payment-service/scripts/build
+  mine-support-user-service/scripts/build
+)

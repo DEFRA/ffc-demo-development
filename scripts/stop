@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+##
+# Stop script
+#
+# Stop all services managed by this project.
+# Expects each service to have a stop script at `scripts/stop`.
+##
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+
+(
+  cd "${projectRoot}"
+
+  services/mine-support/scripts/stop
+  services/mine-support-api-gateway/scripts/stop
+  services/mine-support-calculation-service/scripts/stop
+  services/mine-support-claim-service/scripts/stop
+  services/mine-support-payment-service/scripts/stop
+  services/mine-support-user-service/scripts/stop
+  scripts/stop-core
+)

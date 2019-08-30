@@ -1,0 +1,91 @@
+#!/usr/bin/env sh
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+
+show_help() {
+  echo "
+Usage: scripts/start [OPTION...]
+
+Build and start application services.
+
+Expects each service to have a start script at '<service_root>/scripts/start',
+which accepts a '--detach' flag to prevent attaching to the terminal or logs.
+
+Options:
+  -f, --force   destroy any existing data volumes before restarting services
+  -h, --help    display this help text
+  -r, --retain  retain any existing data volumes while restarting services
+  -q, --quick   skip rebuilding services
+"
+}
+
+while :; do
+  case $1 in
+    -f|--force)
+      force="true"
+      ;;
+
+    -h|--help)   # Call a "show_help" function to display a synopsis, then exit.
+      show_help
+      exit
+      ;;
+
+    -q|--quick)   # Skip rebuilding existing services.
+      quick="true"
+      ;;
+
+    -r|--retain)  # Retain existing volumes.
+      retain="true"
+      ;;
+
+    *)
+      break
+  esac
+
+  shift
+done
+
+(
+  cd "${projectRoot}"
+
+  existingServices="$( docker ps --filter name=^mine-support --format={{.Names}} )"
+  existingVolumes="$( docker volume ls --filter name=^mine-support --format={{.Name}} )"
+
+  if [ -n "${existingServices}${existingVolumes}" ]; then
+    if [ "${force}" = "true" ]; then
+      if [ "${retain}" = "true" ]; then
+        echo "Invalid arguments. The '--force' and '--retain' flags cannot be used together."
+      fi
+    else
+      printf "\nThe following services and associated volumes have been detected.\n"
+      printf "\nServices:\n\n${existingServices}.\n\n\nVolumes:\n\n${existingVolumes}\n"
+      printf "\nContinuing this process would restart the above services and destroy associated data volumes.\n"
+      printf "\nTo destroy existing volumes, pass the '--force' or '-f' flag."
+      printf "\nTo retain existing volumes, pass the '--retain' or '-r' flag.\n\n"
+
+      exit 0
+    fi
+
+    if [ "${retain}" != "true" ]; then
+      scripts/stop
+    fi
+  fi
+
+  if [ "${quick}" != "true" ]; then
+    scripts/build
+  fi
+
+  scripts/start-core --detach
+  services/mine-support/scripts/start --detach
+  services/mine-support-api-gateway/scripts/start --detach
+  services/mine-support-calculation-service/scripts/start --detach
+  services/mine-support-claim-service/scripts/start --detach
+  services/mine-support-payment-service/scripts/start --detach
+  services/mine-support-user-service/scripts/start --detach
+
+  if [ ${quick} ]; then
+    printf "\n\nWarning: services were not rebuilt so any changes to dependencies will not have been applied."
+    printf "\nTo rebuild services, run this script again without '--quick'.\n\n"
+  fi
+)
