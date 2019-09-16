@@ -1,14 +1,14 @@
 version: '3.7'
 
 services:
-  mine-support-message-queue:
-    container_name: mine-support-message-queue
+  ffc-demo-message-queue:
+    container_name: ffc-demo-message-queue
     image: vromero/activemq-artemis:2.9.0-alpine
     environment:
       ARTEMIS_USERNAME: artemis
       ARTEMIS_PASSWORD: artemis
     networks:
-      - mine-support
+      - ffc-demo
     ports:
       - "8161:8161" # Web server
       - "5672:5672" # AMQP
@@ -21,7 +21,7 @@ services:
       - message-queue-jmx:/opt/jmx-exporter/etc-override
 
 networks:
-  mine-support:
+  ffc-demo:
     external: true
 
 volumes:
