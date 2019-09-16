@@ -1,4 +1,4 @@
-# Mine Support Development
+# FFC Demo Development
 
 Digital service mock to claim public money in the event property subsides into mine shaft. This repository provides a complete development environment for the ficitious Mine Support service.
 
@@ -22,7 +22,7 @@ scripts/install
 
 ## Running the application
 
-Scripts are provided to conveniently run the entire application stack in development. These rely on the equivalent scripts in each service repository, which should bind-mount application code from the host file system and enable hot reloading where possible.
+Scripts are provided to conveniently run the entire application stack in development. These rely on each service repository have a `connected-start` script which accepts a `--detach` flag to prevent attaching/tailing logs. Those scripts should bind-mount application code from the host file system and enable hot reloading where possible.
 
 ```
 # Start the application stack
