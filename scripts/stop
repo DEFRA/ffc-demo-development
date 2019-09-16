@@ -13,11 +13,11 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
 (
   cd "${projectRoot}"
 
-  services/mine-support/scripts/stop
-  services/mine-support-api-gateway/scripts/stop
-  services/mine-support-calculation-service/scripts/stop
-  services/mine-support-claim-service/scripts/stop
-  services/mine-support-payment-service/scripts/stop
-  services/mine-support-user-service/scripts/stop
+  services/mine-support/scripts/connected-stop
+  services/mine-support-api-gateway/scripts/connected-stop
+  services/mine-support-calculation-service/scripts/connected-stop
+  services/mine-support-claim-service/scripts/connected-stop
+  services/mine-support-payment-service/scripts/connected-stop
+  services/mine-support-user-service/scripts/connected-stop
   scripts/stop-core
 )
