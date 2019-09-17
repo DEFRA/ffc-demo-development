@@ -1,6 +1,6 @@
 # FFC Demo Development
 
-Digital service mock to claim public money in the event property subsides into mine shaft. This repository provides a complete development environment for the ficitious Mine Support service.
+Development environment for the FFC demo service.
 
 ## Pre-requisites
 
