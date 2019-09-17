@@ -77,12 +77,12 @@ done
   fi
 
   scripts/start-core --detach
-  services/mine-support/scripts/connected-start --detach
-  services/mine-support-api-gateway/scripts/connected-start --detach
-  services/mine-support-calculation-service/scripts/connected-start --detach
-  services/mine-support-claim-service/scripts/connected-start --detach
-  services/mine-support-payment-service/scripts/connected-start --detach
-  services/mine-support-user-service/scripts/connected-start --detach
+  services/ffc-demo-web/scripts/connected-start --detach
+  services/ffc-demo-api-gateway/scripts/connected-start --detach
+  services/ffc-demo-calculation-service/scripts/connected-start --detach
+  services/ffc-demo-claim-service/scripts/connected-start --detach
+  services/ffc-demo-payment-service/scripts/connected-start --detach
+  services/ffc-demo-user-service/scripts/connected-start --detach
 
   if [ ${quick} ]; then
     printf "\n\nWarning: services were not rebuilt so any changes to dependencies will not have been applied."
