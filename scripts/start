@@ -15,8 +15,8 @@ which accepts a '--detach' flag to prevent attaching to the terminal or logs.
 Options:
   -f, --force   destroy any existing data volumes before restarting services
   -h, --help    display this help text
-  -r, --retain  retain any existing data volumes while restarting services
   -q, --quick   skip rebuilding services
+  -r, --retain  retain any existing data volumes while restarting services
 "
 }
 

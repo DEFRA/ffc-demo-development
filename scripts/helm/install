@@ -1,0 +1,35 @@
+#!/bin/sh
+
+set -e
+projectRoot="$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/../.." || return; pwd)"
+
+(
+  cd "${projectRoot}"
+
+  echo "Deploying message queue"
+  helm repo add activemq-artemis https://mailrucloudsolutions.github.io/activemq-artemis-helm/
+  helm upgrade \
+    --atomic \
+    --install \
+    --namespace ffc-demo \
+    --set artemisUser=artemis \
+    --set artemisPassword=artemis \
+    --set replicas=1 \
+    --set persistence.enabled=false \
+    ffc-demo-message-queue \
+    activemq-artemis/activemq-artemis
+
+  echo "Deploying PostgreSQL"
+  helm upgrade \
+    --atomic \
+    --install \
+    --namespace ffc-demo \
+    --set persistence.enabled=false \
+    # --set postgresqlDatabase=mine_claims \
+    --set postgresqlPassword=changeme \
+    --set postgresqlUsername=postgres@mine-support2 \
+    --set service.port=5432 \
+    --wait \
+    ffc-demo-postgres \
+    stable/postgresql
+)

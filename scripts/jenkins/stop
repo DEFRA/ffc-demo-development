@@ -1,0 +1,68 @@
+#!/usr/bin/env sh
+
+##
+# Stop Jenkins script
+#
+# Stop the Jenkins container created by the Jenkins start script
+# and remove.
+##
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/../.." || return; pwd)
+
+# Set Docker resource names managed by this script
+jenkinsContainer="ffc-demo-jenkins"
+jenkinsHomeVolume="ffc-demo-jenkins-home"
+
+# show_help: function to show help text
+show_help() {
+  echo "
+Usage: scripts/jenkins/stop [OPTION...]
+
+Stop the Jenkins container created by scripts/jenkins/start.
+
+Options:
+  -c, --clean  also remove volumes associated with the Jenkins container
+  -h, --help   display this help text
+"
+}
+
+# Parse arguments/flags
+while :; do
+  case $1 in
+    -c|--clean)  # Remove associated volumes as well as the Jenkins container
+      clean="true"
+      ;;
+
+    -h|--help)   # Call "show_help" function to display a synopsis, then exit
+      show_help
+      exit
+      ;;
+
+    *)
+      break
+  esac
+
+  shift
+done
+
+(
+  cd "${projectRoot}"
+
+  existingContainer="$( docker ps --filter name=^${jenkinsContainer}$ --format={{.Names}} )"
+
+  if [ -n "${existingContainer}" ]; then
+    docker stop "${jenkinsContainer}"
+  fi
+
+  if [ "${clean}" = "true" ]; then
+    existingVolumes="$( docker volume ls --filter name=^${jenkinsHomeVolume}$ --format={{.Name}} )"
+
+    if [ -n "${existingVolumes}" ]; then
+      docker volume rm "${jenkinsHomeVolume}"
+    fi
+  else
+    printf "\n\nNotice: associated volumes were not removed so Jenkins will retain data on its next start."
+    printf "\nTo remove Jenkins volumes, run this script again with '--clean'.\n\n"
+  fi
+)

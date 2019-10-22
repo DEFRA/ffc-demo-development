@@ -1,0 +1,75 @@
+#!/usr/bin/env sh
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/../.." || return; pwd)
+
+# Set Docker resource names managed by this script
+jenkinsContainer="ffc-demo-jenkins"
+jenkinsHomeVolume="ffc-demo-jenkins-home"
+jenkinsImage="ffc-demo-jenkins"
+
+# show_help: function to show help text
+show_help() {
+  echo "
+Usage: scripts/jenkins/start [OPTION...]
+
+Start a Jenkins container with the services folder bound-mounted so
+pipelines can be tested locally.
+
+Options:
+  -c, --clean  remove existing volumes to ensure a clean start
+  -h, --help   display this help text
+"
+}
+
+# Parse arguments/flags
+while :; do
+  case $1 in
+    -c|--clean)  # Remove existing volumes before starting the Jenkins container
+      clean="true"
+      ;;
+
+    -h|--help)   # Call "show_help" function to display a synopsis, then exit
+      show_help
+      exit
+      ;;
+
+    *)
+      break
+  esac
+
+  shift
+done
+
+(
+  cd "${projectRoot}"
+
+  existingContainer="$( docker ps --filter name=^${jenkinsContainer}$ --format={{.Names}} )"
+
+  if [ "${clean}" = "true" ]; then
+    scripts/jenkins/stop --clean
+  elif [ -n "${existingContainer}" ]; then
+    echo "Jenkins is already running. If you wish to force a clean start, removing existing data, use the '--clean' flag."
+    exit
+  fi
+
+  docker run \
+    --init \
+    --name "${jenkinsContainer}" \
+    --privileged \
+    -d \
+    -p 8080:8080 \
+    -u root \
+    -v "${jenkinsHomeVolume}":/var/jenkins_home \
+    -v "${projectRoot}/services:/services:ro" \
+    ${jenkinsImage}
+
+  printf "\nJenkins is starting. To see when it is ready, go to the following URL in your browser:"
+  printf "\n\n    http://localhost:8080/blue\n\n"
+  printf "Once Jenkins is ready, use the following script to obtain the initial password:"
+  printf "\n\n    scripts/jenkins/password\n\n"
+  printf "To create a pipeline:\n"
+  printf "\n  - Under 'Where do you store your code', choose 'Git'"
+  printf "\n  - For the repository URL, enter 'file:///services/<SERVICE_NAME>', where <SERVICE_NAME> is a subfolder of ./services/"
+  printf "\n\n"
+)
