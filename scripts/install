@@ -33,9 +33,7 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
     && >&2 echo "The 'ffc-demo-user-service' directory already exists. Skipping." \
     || git clone https://github.com/DEFRA/ffc-demo-user-service.git
 
-  cd "${projectRoot}"
-
-  printf "\nBuilding services\n"
+  cd "${projectRoot}"  
 
   scripts/build
 )
