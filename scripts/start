@@ -77,12 +77,21 @@ done
   fi
 
   scripts/start-core --detach
-  services/ffc-demo-web/scripts/connected-start --detach
-  services/ffc-demo-api-gateway/scripts/connected-start --detach
-  services/ffc-demo-calculation-service/scripts/connected-start --detach
-  services/ffc-demo-claim-service/scripts/connected-start --detach
-  services/ffc-demo-payment-service/scripts/connected-start --detach
-  services/ffc-demo-user-service/scripts/connected-start --detach
+  docker-compose \
+  -f docker-compose.yaml \
+  -f services/ffc-demo-web/docker-compose.yaml \
+  -f services/ffc-demo-web/docker-compose.link.yaml \
+  -f services/ffc-demo-api-gateway/docker-compose.yaml \
+  -f services/ffc-demo-api-gateway/docker-compose.link.yaml \
+  -f services/ffc-demo-user-service/docker-compose.yaml \
+  -f services/ffc-demo-user-service/docker-compose.link.yaml \
+  -f services/ffc-demo-claim-service/docker-compose.yaml \
+  -f services/ffc-demo-claim-service/docker-compose.link.yaml \
+  -f services/ffc-demo-payment-service/docker-compose.yaml \
+  -f services/ffc-demo-payment-service/docker-compose.link.yaml \
+  -f services/ffc-demo-calculation-service/docker-compose.yaml \
+  -f services/ffc-demo-calculation-service/docker-compose.link.yaml \
+  up --detach 
 
   if [ ${quick} ]; then
     printf "\n\nWarning: services were not rebuilt so any changes to dependencies will not have been applied."
