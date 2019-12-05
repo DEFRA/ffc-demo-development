@@ -22,7 +22,7 @@ scripts/install
 
 ## Running the application
 
-Scripts are provided to conveniently run the entire application stack in development. These rely on each service repository have a `connected-start` script which accepts a `--detach` flag to prevent attaching/tailing logs. Those scripts should bind-mount application code from the host file system and enable hot reloading where possible.
+Scripts are provided to conveniently run the entire application stack in development. 
 
 ```
 # Start the application stack
@@ -42,7 +42,7 @@ scripts/start --help
 
 ## Running a subset of services
 
-It may be convenient to run a subset of the application stack connected to shared core services (such as message queues). For this purpose, scripts are provided to start the core services without the rest of the stack. Each additional service may be run using the scripts provided in their repositories (`./services/<repository>`).
+It may be convenient to run a subset of the application stack connected to shared core services (such as message queues). For this purpose, scripts are provided to start the core services without the rest of the stack. Each additional service may be run using the docker-compose files found in their respective repository.
 
 ```
 # Start supporting services without the application stack
