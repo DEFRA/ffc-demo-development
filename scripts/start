@@ -75,28 +75,28 @@ done
 
   scripts/start-core --detach
   docker-compose \
-  -f services/ffc-demo-web/docker-compose.yaml \
-  -f services/ffc-demo-web/docker-compose.link.yaml \
+    -f services/ffc-demo-web/docker-compose.yaml \
+    -f services/ffc-demo-web/docker-compose.link.yaml \
+    up --detach 
+  docker-compose \
+    -f services/ffc-demo-api-gateway/docker-compose.yaml \
+    -f services/ffc-demo-api-gateway/docker-compose.link.yaml \
+    up --detach 
+  docker-compose \
+    -f services/ffc-demo-user-service/docker-compose.yaml \
+    -f services/ffc-demo-user-service/docker-compose.link.yaml \
+    up --detach 
+  docker-compose \
+    -f services/ffc-demo-claim-service/docker-compose.yaml \
+    -f services/ffc-demo-claim-service/docker-compose.link.yaml \
+    up --detach 
+  docker-compose \
+    -f services/ffc-demo-payment-service/docker-compose.yaml \
+    -f services/ffc-demo-payment-service/docker-compose.link.yaml \
   up --detach 
   docker-compose \
-  -f services/ffc-demo-api-gateway/docker-compose.yaml \
-  -f services/ffc-demo-api-gateway/docker-compose.link.yaml \
-  up --detach 
-  docker-compose \
-  -f services/ffc-demo-user-service/docker-compose.yaml \
-  -f services/ffc-demo-user-service/docker-compose.link.yaml \
-  up --detach 
-  docker-compose \
-  -f services/ffc-demo-claim-service/docker-compose.yaml \
-  -f services/ffc-demo-claim-service/docker-compose.link.yaml \
-  up --detach 
-  docker-compose \
-  -f services/ffc-demo-payment-service/docker-compose.yaml \
-  -f services/ffc-demo-payment-service/docker-compose.link.yaml \
-  up --detach 
-  docker-compose \
-  -f services/ffc-demo-calculation-service/docker-compose.yaml \
-  -f services/ffc-demo-calculation-service/docker-compose.link.yaml \
+    -f services/ffc-demo-calculation-service/docker-compose.yaml \
+    -f services/ffc-demo-calculation-service/docker-compose.link.yaml \
   up --detach 
 
   if [ ${quick} ]; then
