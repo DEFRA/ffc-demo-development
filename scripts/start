@@ -78,7 +78,6 @@ done
 
   scripts/start-core --detach
   docker-compose \
-  -f docker-compose.yaml \
   -f services/ffc-demo-web/docker-compose.yaml \
   -f services/ffc-demo-web/docker-compose.link.yaml \
   -f services/ffc-demo-api-gateway/docker-compose.yaml \
