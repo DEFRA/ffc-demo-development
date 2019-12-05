@@ -4,7 +4,6 @@
 # Stop script
 #
 # Stop all services managed by this project.
-# Expects each service to have a stop script at `scripts/stop`.
 ##
 
 set -e

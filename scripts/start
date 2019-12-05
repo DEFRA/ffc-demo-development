@@ -9,9 +9,6 @@ Usage: scripts/start [OPTION...]
 
 Build and start application services.
 
-Expects each service to have a start script at '<service_root>/scripts/start',
-which accepts a '--detach' flag to prevent attaching to the terminal or logs.
-
 Options:
   -f, --force   destroy any existing data volumes before restarting services
   -h, --help    display this help text
