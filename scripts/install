@@ -20,22 +20,20 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
   test -d ffc-demo-api-gateway \
     && >&2 echo "The 'ffc-demo-api-gateway' directory already exists. Skipping." \
     || git clone https://github.com/DEFRA/ffc-demo-api-gateway.git
-  test -d ffc-demo-calculation-service \
-    && >&2 echo "The 'ffc-demo-calculation-service' directory already exists. Skipping." \
-    || git clone https://github.com/DEFRA/ffc-demo-calculation-service.git
+  test -d ffc-demo-user-service \
+    && >&2 echo "The 'ffc-demo-user-service' directory already exists. Skipping." \
+    || git clone https://github.com/DEFRA/ffc-demo-user-service.git
   test -d ffc-demo-claim-service \
     && >&2 echo "The 'ffc-demo-claim-service' directory already exists. Skipping." \
     || git clone https://github.com/DEFRA/ffc-demo-claim-service.git
   test -d ffc-demo-payment-service \
     && >&2 echo "The 'ffc-demo-payment-service' directory already exists. Skipping." \
     || git clone https://github.com/DEFRA/ffc-demo-payment-service.git
-  test -d ffc-demo-user-service \
-    && >&2 echo "The 'ffc-demo-user-service' directory already exists. Skipping." \
-    || git clone https://github.com/DEFRA/ffc-demo-user-service.git
+  test -d ffc-demo-calculation-service \
+    && >&2 echo "The 'ffc-demo-calculation-service' directory already exists. Skipping." \
+    || git clone https://github.com/DEFRA/ffc-demo-calculation-service.git
 
-  cd "${projectRoot}"
-
-  printf "\nBuilding services\n"
+  cd "${projectRoot}"  
 
   scripts/build
 )

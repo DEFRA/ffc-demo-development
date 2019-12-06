@@ -4,7 +4,6 @@
 # Stop script
 #
 # Stop all services managed by this project.
-# Expects each service to have a stop script at `scripts/stop`.
 ##
 
 set -e
@@ -13,11 +12,30 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
 (
   cd "${projectRoot}"
 
-  services/ffc-demo-web/scripts/connected-stop
-  services/ffc-demo-api-gateway/scripts/connected-stop
-  services/ffc-demo-calculation-service/scripts/connected-stop
-  services/ffc-demo-claim-service/scripts/connected-stop
-  services/ffc-demo-payment-service/scripts/connected-stop
-  services/ffc-demo-user-service/scripts/connected-stop
+  docker-compose \
+    -f services/ffc-demo-web/docker-compose.yaml \
+    -f services/ffc-demo-web/docker-compose.link.yaml \
+  down -v $@
+  docker-compose \
+    -f services/ffc-demo-api-gateway/docker-compose.yaml \
+    -f services/ffc-demo-api-gateway/docker-compose.link.yaml \
+  down -v $@
+  docker-compose \
+    -f services/ffc-demo-user-service/docker-compose.yaml \
+    -f services/ffc-demo-user-service/docker-compose.link.yaml \
+  down -v $@
+  docker-compose \
+    -f services/ffc-demo-claim-service/docker-compose.yaml \
+    -f services/ffc-demo-claim-service/docker-compose.link.yaml \
+  down -v $@
+  docker-compose \
+    -f services/ffc-demo-payment-service/docker-compose.yaml \
+    -f services/ffc-demo-payment-service/docker-compose.link.yaml \
+  down -v $@
+  docker-compose \
+    -f services/ffc-demo-calculation-service/docker-compose.yaml \
+    -f services/ffc-demo-calculation-service/docker-compose.link.yaml \
+  down -v $@ 
+
   scripts/stop-core
 )
