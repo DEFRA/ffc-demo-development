@@ -20,6 +20,9 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
   docker-compose -f ffc-demo-user-service/docker-compose.yaml build
   docker-compose -f ffc-demo-claim-service/docker-compose.yaml build
   docker-compose -f ffc-demo-payment-service/docker-compose.yaml build
-  docker-compose -f ffc-demo-payment-service-core/docker-compose.yaml build
+  docker-compose -f ffc-demo-payment-service-core/docker-compose.yaml \
+    -f ffc-demo-payment-service-core/docker-compose.override.yaml \
+    -f ffc-demo-payment-service-core/docker-compose.development.yaml \
+    build
   docker-compose -f ffc-demo-calculation-service/docker-compose.yaml build
 )
