@@ -93,6 +93,11 @@ done
   docker-compose \
     -f services/ffc-demo-payment-service/docker-compose.yaml \
     -f services/ffc-demo-payment-service/docker-compose.link.yaml \
+  up --detach
+  docker-compose \
+    -f services/ffc-demo-payment-service-core/docker-compose.yaml \
+    -f services/ffc-demo-payment-service-core/docker-compose.development.yaml \
+    -f services/ffc-demo-payment-service-core/docker-compose.link.yaml \
   up --detach 
   docker-compose \
     -f services/ffc-demo-calculation-service/docker-compose.yaml \

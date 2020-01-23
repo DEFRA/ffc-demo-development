@@ -18,6 +18,7 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
   (cd "services/ffc-demo-calculation-service" && git pull)
   (cd "services/ffc-demo-claim-service" && git pull)
   (cd "services/ffc-demo-payment-service" && git pull)
+  (cd "services/ffc-demo-payment-service-core" && git pull)
   (cd "services/ffc-demo-user-service" && git pull)
 
   scripts/build
