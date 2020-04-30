@@ -16,8 +16,6 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
   printf "\nBuilding services\n"
 
   docker-compose -f ffc-demo-web/docker-compose.yaml build
-  docker-compose -f ffc-demo-api-gateway/docker-compose.yaml build
-  docker-compose -f ffc-demo-user-service/docker-compose.yaml build
   docker-compose -f ffc-demo-claim-service/docker-compose.yaml build
   docker-compose -f ffc-demo-payment-service/docker-compose.yaml build
   docker-compose -f ffc-demo-payment-service-core/docker-compose.yaml \

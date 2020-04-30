@@ -17,14 +17,6 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
     -f services/ffc-demo-web/docker-compose.link.yaml \
   down -v $@
   docker-compose \
-    -f services/ffc-demo-api-gateway/docker-compose.yaml \
-    -f services/ffc-demo-api-gateway/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
-    -f services/ffc-demo-user-service/docker-compose.yaml \
-    -f services/ffc-demo-user-service/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
     -f services/ffc-demo-claim-service/docker-compose.yaml \
     -f services/ffc-demo-claim-service/docker-compose.link.yaml \
   down -v $@
