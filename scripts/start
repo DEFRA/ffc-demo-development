@@ -1,111 +1,47 @@
 #!/usr/bin/env sh
+if [ -z "$(docker network ls --filter name=^ffc-demo$ --format={{.Name}})" ]; then
+  echo "Creating ffc-demo Docker network"
+  docker network create ffc-demo
+fi
 
-set -e
-projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+docker-compose \
+  -f ../ffc-demo-web/docker-compose.yaml \
+  -f ../ffc-demo-web/docker-compose.override.yaml \
+  -f ../ffc-demo-web/docker-compose.link.yaml \
+  up \
+  --detach
 
-show_help() {
-  echo "
-Usage: scripts/start [OPTION...]
+docker-compose \
+  -f ../ffc-demo-claim-service/docker-compose.yaml \
+  -f ../ffc-demo-claim-service/docker-compose.override.yaml \
+  -f ../ffc-demo-claim-service/docker-compose.link.yaml \
+  up \
+  --detach
 
-Build and start application services.
+docker-compose \
+  -f ../ffc-demo-payment-service/docker-compose.yaml \
+  -f ../ffc-demo-payment-service/docker-compose.override.yaml \
+  -f ../ffc-demo-payment-service/docker-compose.link.yaml \
+  up \
+  --detach
 
-Options:
-  -f, --force   destroy any existing data volumes before restarting services
-  -h, --help    display this help text
-  -r, --retain  retain any existing data volumes while restarting services
-  -q, --quick   skip rebuilding services
-"
-}
+docker-compose \
+  -f ../ffc-demo-payment-service-core/docker-compose.yaml \
+  -f ../ffc-demo-payment-service-core/docker-compose.override.yaml \
+  -f ../ffc-demo-payment-service-core/docker-compose.link.yaml \
+  up \
+  --detach
 
-while :; do
-  case $1 in
-    -f|--force)
-      force="true"
-      ;;
+docker-compose \
+  -f ../ffc-demo-calculation-service/docker-compose.yaml \
+  -f ../ffc-demo-calculation-service/docker-compose.override.yaml \
+  -f ../ffc-demo-calculation-service/docker-compose.link.yaml \
+  up \
+  --detach
 
-    -h|--help)   # Call a "show_help" function to display a synopsis, then exit.
-      show_help
-      exit
-      ;;
-
-    -q|--quick)   # Skip rebuilding existing services.
-      quick="true"
-      ;;
-
-    -r|--retain)  # Retain existing volumes.
-      retain="true"
-      ;;
-
-    *)
-      break
-  esac
-
-  shift
-done
-
-(
-  cd "${projectRoot}"
-
-  existingServices="$( docker ps --filter name=^ffc-demo --format={{.Names}} )"
-  existingVolumes="$( docker volume ls --filter name=^ffc-demo --format={{.Name}} )"
-
-  if [ -n "${existingServices}${existingVolumes}" ]; then
-    if [ "${force}" = "true" ]; then
-      if [ "${retain}" = "true" ]; then
-        echo "Invalid arguments. The '--force' and '--retain' flags cannot be used together."
-      fi
-    else
-      printf "\nThe following services and associated volumes have been detected.\n"
-      printf "\nServices:\n\n${existingServices}.\n\n\nVolumes:\n\n${existingVolumes}\n"
-      printf "\nContinuing this process would restart the above services and destroy associated data volumes.\n"
-      printf "\nTo destroy existing volumes, pass the '--force' or '-f' flag."
-      printf "\nTo retain existing volumes, pass the '--retain' or '-r' flag.\n\n"
-
-      exit 0
-    fi
-
-    if [ "${retain}" != "true" ]; then
-      scripts/stop
-    fi
-  fi
-
-  if [ "${quick}" != "true" ]; then
-    scripts/build
-  fi
-
-  scripts/start-core --detach
   docker-compose \
-    -f services/ffc-demo-web/docker-compose.yaml \
-    -f services/ffc-demo-web/docker-compose.link.yaml \
-    up --detach 
-  docker-compose \
-    -f services/ffc-demo-api-gateway/docker-compose.yaml \
-    -f services/ffc-demo-api-gateway/docker-compose.link.yaml \
-    up --detach 
-  docker-compose \
-    -f services/ffc-demo-user-service/docker-compose.yaml \
-    -f services/ffc-demo-user-service/docker-compose.link.yaml \
-    up --detach 
-  docker-compose \
-    -f services/ffc-demo-claim-service/docker-compose.yaml \
-    -f services/ffc-demo-claim-service/docker-compose.link.yaml \
-    up --detach 
-  docker-compose \
-    -f services/ffc-demo-payment-service/docker-compose.yaml \
-    -f services/ffc-demo-payment-service/docker-compose.link.yaml \
-  up --detach
-  docker-compose \
-    -f services/ffc-demo-payment-service-core/docker-compose.yaml \
-    -f services/ffc-demo-payment-service-core/docker-compose.development.yaml \
-    -f services/ffc-demo-payment-service-core/docker-compose.link.yaml \
-  up --detach 
-  docker-compose \
-    -f services/ffc-demo-calculation-service/docker-compose.yaml \
-    -f services/ffc-demo-calculation-service/docker-compose.link.yaml \
-  up --detach 
-
-  if [ ${quick} ]; then
-    printf "\n\nWarning: services were not rebuilt so any changes to dependencies will not have been applied."
-    printf "\nTo rebuild services, run this script again without '--quick'.\n\n"
-  fi
-)
+  -f ../ffc-demo-payment-web/docker-compose.yaml \
+  -f ../ffc-demo-payment-web/docker-compose.override.yaml \
+  -f ../ffc-demo-payment-web/docker-compose.link.yaml \
+  up \
+  --detach
