@@ -1,47 +1,63 @@
+
 #!/usr/bin/env sh
-if [ -z "$(docker network ls --filter name=^ffc-demo$ --format={{.Name}})" ]; then
-  echo "Creating ffc-demo Docker network"
-  docker network create ffc-demo
-fi
 
-docker-compose \
-  -f ../ffc-demo-web/docker-compose.yaml \
-  -f ../ffc-demo-web/docker-compose.override.yaml \
-  -f ../ffc-demo-web/docker-compose.link.yaml \
-  up \
-  --detach
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
 
-docker-compose \
-  -f ../ffc-demo-claim-service/docker-compose.yaml \
-  -f ../ffc-demo-claim-service/docker-compose.override.yaml \
-  -f ../ffc-demo-claim-service/docker-compose.link.yaml \
-  up \
-  --detach
+(
+  cd "${projectRoot}"
+  cd ..
 
-docker-compose \
-  -f ../ffc-demo-payment-service/docker-compose.yaml \
-  -f ../ffc-demo-payment-service/docker-compose.override.yaml \
-  -f ../ffc-demo-payment-service/docker-compose.link.yaml \
-  up \
-  --detach
-
-docker-compose \
-  -f ../ffc-demo-payment-service-core/docker-compose.yaml \
-  -f ../ffc-demo-payment-service-core/docker-compose.override.yaml \
-  -f ../ffc-demo-payment-service-core/docker-compose.link.yaml \
-  up \
-  --detach
-
-docker-compose \
-  -f ../ffc-demo-calculation-service/docker-compose.yaml \
-  -f ../ffc-demo-calculation-service/docker-compose.override.yaml \
-  -f ../ffc-demo-calculation-service/docker-compose.link.yaml \
-  up \
-  --detach
+  if [ -z "$(docker network ls --filter name=^ffc-demo$ --format={{.Name}})" ]; then
+    echo "Creating ffc-demo Docker network"
+    docker network create ffc-demo
+  fi
 
   docker-compose \
-  -f ../ffc-demo-payment-web/docker-compose.yaml \
-  -f ../ffc-demo-payment-web/docker-compose.override.yaml \
-  -f ../ffc-demo-payment-web/docker-compose.link.yaml \
-  up \
-  --detach
+    -f ffc-demo-web/docker-compose.yaml \
+    -f ffc-demo-web/docker-compose.override.yaml \
+    -f ffc-demo-web/docker-compose.link.yaml \
+    up \
+    --detach
+
+  docker-compose -f ffc-demo-claim-service/docker-compose.migrate.yaml run --rm database-up
+
+  docker-compose \
+    -f ffc-demo-claim-service/docker-compose.yaml \
+    -f ffc-demo-claim-service/docker-compose.override.yaml \
+    -f ffc-demo-claim-service/docker-compose.link.yaml \
+    up \
+    --detach
+
+  docker-compose -f ffc-demo-payment-service/docker-compose.migrate.yaml run --rm database-up
+
+  docker-compose \
+    -f ffc-demo-payment-service/docker-compose.yaml \
+    -f ffc-demo-payment-service/docker-compose.override.yaml \
+    -f ffc-demo-payment-service/docker-compose.link.yaml \
+    up \
+    --detach
+
+  docker-compose -f ffc-demo-payment-service-core/docker-compose.migrate.yaml run --rm database-up
+
+  docker-compose \
+    -f ffc-demo-payment-service-core/docker-compose.yaml \
+    -f ffc-demo-payment-service-core/docker-compose.override.yaml \
+    -f ffc-demo-payment-service-core/docker-compose.link.yaml \
+    up \
+    --detach
+
+  docker-compose \
+    -f ffc-demo-calculation-service/docker-compose.yaml \
+    -f ffc-demo-calculation-service/docker-compose.override.yaml \
+    -f ffc-demo-calculation-service/docker-compose.link.yaml \
+    up \
+    --detach
+
+  docker-compose \
+    -f ffc-demo-payment-web/docker-compose.yaml \
+    -f ffc-demo-payment-web/docker-compose.override.yaml \
+    -f ffc-demo-payment-web/docker-compose.link.yaml \
+    up \
+    --detach
+)
