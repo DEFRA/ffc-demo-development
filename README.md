@@ -9,7 +9,7 @@ Development environment for the FFC demo service.
 
 ## Setup
 
-A script is provided to clone and prepare repositories for developing all the services which make up this application. Services will be cloned to [`./services/<repository>`](./services).
+A script is provided to clone and prepare repositories for developing all the services which make up this application.
 
 ```
 # Clone repositories and build services
@@ -18,20 +18,14 @@ scripts/install
 
 ## Running the application
 
-Scripts are provided to conveniently run the entire application stack in development. 
+Scripts are provided to conveniently run the entire application stack in development including running required database migrations.
 
 ```
 # Start the application stack
 scripts/start
 
-# Stop the application stack, removing Docker networks and volumes
+# Stop the application stack, optionally removing Docker networks and volumes
 scripts/stop
-```
-
-The start script will check for existing services or volumes associated with this project and abort if any are found. Flags may be passed to force a restart, either destroying or retaining volumes. For more information, pass the `--help` or `-h` flag:
-
-```
-scripts/start --help
 ```
 
 ## Dependency changes
@@ -50,6 +44,11 @@ Since dependency changes necessitate a rebuild of the affected service, it is re
 ```
 # Pull remote updates and build services
 scripts/update
+
+# Switch to `master` branch before updating
+scripts/update --main
+# or
+scripts/uddate -m
 ```
 
 This will not handle any merge conflicts during the `git pull` operations so check the output carefully and deal with any conflicts within each service repository.
