@@ -4,22 +4,44 @@
 # Update script
 #
 # Update the services managed by this project.
-# Depends on git and scripts/build.
 ##
 
 set -e
 projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
 
+while :; do
+  case $1 in
+    -m|--main)
+      main="true"
+      ;;
+    *)
+      break
+  esac
+
+  shift
+done
+
 (
   cd "${projectRoot}"
+  cd ..
 
-  (cd "services/ffc-demo-web" && git pull)
-  (cd "services/ffc-demo-api-gateway" && git pull)
-  (cd "services/ffc-demo-calculation-service" && git pull)
-  (cd "services/ffc-demo-claim-service" && git pull)
-  (cd "services/ffc-demo-payment-service" && git pull)
-  (cd "services/ffc-demo-payment-service-core" && git pull)
-  (cd "services/ffc-demo-user-service" && git pull)
+  if [ "${main}" = "true" ]; then
+    (cd "ffc-demo-web" && git checkout master)
+    (cd "ffc-demo-claim-service" && git checkout master)
+    (cd "ffc-demo-payment-service" && git checkout master)
+    (cd "ffc-demo-payment-service-core" && git checkout master)
+    (cd "ffc-demo-calculation-service" && git checkout master)
+    (cd "ffc-demo-payment-web" && git checkout master)
+  fi
+
+  (cd "ffc-demo-web" && git pull)
+  (cd "ffc-demo-claim-service" && git pull)
+  (cd "ffc-demo-payment-service" && git pull)
+  (cd "ffc-demo-payment-service-core" && git pull)
+  (cd "ffc-demo-calculation-service" && git pull)
+  (cd "ffc-demo-payment-web" && git pull)
+
+  cd "${projectRoot}"
 
   scripts/build
 )

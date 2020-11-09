@@ -1,46 +1,53 @@
 #!/usr/bin/env sh
 
-##
-# Stop script
-#
-# Stop all services managed by this project.
-##
-
 set -e
 projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
 
 (
   cd "${projectRoot}"
+  cd ..
 
   docker-compose \
-    -f services/ffc-demo-web/docker-compose.yaml \
-    -f services/ffc-demo-web/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
-    -f services/ffc-demo-api-gateway/docker-compose.yaml \
-    -f services/ffc-demo-api-gateway/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
-    -f services/ffc-demo-user-service/docker-compose.yaml \
-    -f services/ffc-demo-user-service/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
-    -f services/ffc-demo-claim-service/docker-compose.yaml \
-    -f services/ffc-demo-claim-service/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
-    -f services/ffc-demo-payment-service/docker-compose.yaml \
-    -f services/ffc-demo-payment-service/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
-    -f services/ffc-demo-payment-service-core/docker-compose.yaml \
-    -f services/ffc-demo-payment-service-core/docker-compose.development.yaml \
-    -f services/ffc-demo-payment-service-core/docker-compose.link.yaml \
-  down -v $@
-  docker-compose \
-    -f services/ffc-demo-calculation-service/docker-compose.yaml \
-    -f services/ffc-demo-calculation-service/docker-compose.link.yaml \
-  down -v $@ 
+  -f ffc-demo-web/docker-compose.yaml \
+  -f ffc-demo-web/docker-compose.override.yaml \
+  -f ffc-demo-web/docker-compose.link.yaml \
+  down \
+  $@
 
-  scripts/stop-core
+docker-compose \
+  -f ffc-demo-claim-service/docker-compose.yaml \
+  -f ffc-demo-claim-service/docker-compose.override.yaml \
+  -f ffc-demo-claim-service/docker-compose.link.yaml \
+  down \
+  $@
+
+docker-compose \
+  -f ffc-demo-payment-service/docker-compose.yaml \
+  -f ffc-demo-payment-service/docker-compose.override.yaml \
+  -f ffc-demo-payment-service/docker-compose.link.yaml \
+  down \
+  $@
+
+docker-compose \
+  -f ffc-demo-payment-service-core/docker-compose.yaml \
+  -f ffc-demo-payment-service-core/docker-compose.override.yaml \
+  -f ffc-demo-payment-service-core/docker-compose.link.yaml \
+  down \
+  $@
+
+docker-compose \
+  -f ffc-demo-calculation-service/docker-compose.yaml \
+  -f ffc-demo-calculation-service/docker-compose.override.yaml \
+  -f ffc-demo-calculation-service/docker-compose.link.yaml \
+  down \
+  $@
+
+  docker-compose \
+  -f ffc-demo-payment-web/docker-compose.yaml \
+  -f ffc-demo-payment-web/docker-compose.override.yaml \
+  -f ffc-demo-payment-web/docker-compose.link.yaml \
+  down \
+  $@
+
+  docker network rm ffc-demo
 )

@@ -1,28 +1,18 @@
 #!/usr/bin/env sh
 
-##
-# Install script
-#
-# Clone repositories managed by this project into `./services/`.
-##
-
+# Clone repositories managed by this project
 set -e
 projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
 
 (
-  cd "${projectRoot}/services"
+  cd "${projectRoot}"
+  cd ..
 
   printf "\nCloning repositories\n"
 
   test -d ffc-demo-web \
     && >&2 echo "The 'ffc-demo-web' directory already exists. Skipping." \
     || git clone https://github.com/DEFRA/ffc-demo-web.git
-  test -d ffc-demo-api-gateway \
-    && >&2 echo "The 'ffc-demo-api-gateway' directory already exists. Skipping." \
-    || git clone https://github.com/DEFRA/ffc-demo-api-gateway.git
-  test -d ffc-demo-user-service \
-    && >&2 echo "The 'ffc-demo-user-service' directory already exists. Skipping." \
-    || git clone https://github.com/DEFRA/ffc-demo-user-service.git
   test -d ffc-demo-claim-service \
     && >&2 echo "The 'ffc-demo-claim-service' directory already exists. Skipping." \
     || git clone https://github.com/DEFRA/ffc-demo-claim-service.git
@@ -35,8 +25,13 @@ projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pw
   test -d ffc-demo-calculation-service \
     && >&2 echo "The 'ffc-demo-calculation-service' directory already exists. Skipping." \
     || git clone https://github.com/DEFRA/ffc-demo-calculation-service.git
+  test -d ffc-demo-payment-web \
+    && >&2 echo "The 'ffc-demo-payment-web' directory already exists. Skipping." \
+    || git clone https://github.com/DEFRA/ffc-demo-payment-web.git
 
-  cd "${projectRoot}"  
+  printf "\nBuilding images\n"
+
+  cd "${projectRoot}"
 
   scripts/build
 )

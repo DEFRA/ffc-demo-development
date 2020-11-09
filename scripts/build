@@ -4,25 +4,44 @@
 # Build script
 #
 # Build the services managed by this project.
-# Expects each service to have a build script at `scripts/build`.
 ##
 
 set -e
 projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
 
 (
-  cd "${projectRoot}/services"
+  cd "${projectRoot}"
+  cd ..
 
   printf "\nBuilding services\n"
 
-  docker-compose -f ffc-demo-web/docker-compose.yaml build
-  docker-compose -f ffc-demo-api-gateway/docker-compose.yaml build
-  docker-compose -f ffc-demo-user-service/docker-compose.yaml build
-  docker-compose -f ffc-demo-claim-service/docker-compose.yaml build
-  docker-compose -f ffc-demo-payment-service/docker-compose.yaml build
-  docker-compose -f ffc-demo-payment-service-core/docker-compose.yaml \
+  docker-compose \
+    -f ffc-demo-web/docker-compose.yaml \
+    -f ffc-demo-web/docker-compose.override.yaml \
+  build $@
+
+  docker-compose \
+    -f ffc-demo-claim-service/docker-compose.yaml \
+    -f ffc-demo-claim-service/docker-compose.override.yaml \
+  build $@
+
+  docker-compose \
+    -f ffc-demo-payment-service/docker-compose.yaml \
+    -f ffc-demo-payment-service/docker-compose.override.yaml \
+  build $@
+
+  docker-compose \
+    -f ffc-demo-payment-service-core/docker-compose.yaml \
     -f ffc-demo-payment-service-core/docker-compose.override.yaml \
-    -f ffc-demo-payment-service-core/docker-compose.development.yaml \
-  build
-  docker-compose -f ffc-demo-calculation-service/docker-compose.yaml build
+  build $@
+
+  docker-compose \
+    -f ffc-demo-calculation-service/docker-compose.yaml \
+    -f ffc-demo-calculation-service/docker-compose.override.yaml \
+  build $@
+
+  docker-compose \
+    -f ffc-demo-payment-web/docker-compose.yaml \
+    -f ffc-demo-payment-web/docker-compose.override.yaml \
+  build $@
 )
