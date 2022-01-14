@@ -1,0 +1,17 @@
+
+#!/usr/bin/env sh
+
+set -e
+projectRoot=$(a="/$0"; a=${a%/*}; a=${a:-.}; a=${a#/}/; cd "$a/.." || return; pwd)
+
+(
+  cd "${projectRoot}"
+  cd ..
+
+  code ffc-demo-web &&\
+    code ffc-demo-claim-service &&\
+    code ffc-demo-payment-service &&\
+    code ffc-demo-payment-service-core &&\
+    code ffc-demo-calculation-service &&\
+    code ffc-demo-payment-web
+)

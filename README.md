@@ -48,7 +48,7 @@ scripts/update
 # Switch to `master` branch before updating
 scripts/update --main
 # or
-scripts/uddate -m
+scripts/update -m
 ```
 
 This will not handle any merge conflicts during the `git pull` operations so check the output carefully and deal with any conflicts within each service repository.
